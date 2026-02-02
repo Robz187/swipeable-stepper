@@ -1,0 +1,14 @@
+/* Add application styles & imports to this file! */
+/* 1. Angular Material Prebuilt Theme (WICHTIG für Farben und Layout) */
+@import '@angular/material/prebuilt-themes/indigo-pink.css';
+
+/* 2. Material Icons Font (WICHTIG für <mat-icon>) */
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+
+/* 3. Basis-Setup für HTML/Body */
+html,
+body {
+  height: 100%;
+  margin: 0;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
+}

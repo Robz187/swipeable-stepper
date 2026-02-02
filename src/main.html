@@ -1,0 +1,13 @@
+<div class="evaluation-dialog" role="main">
+  <cx-stepper [isMobile]="isMobile()">
+    @for (step of steps; track step.id; let idx = $index) {
+    <mat-step [label]="step.title" [stepControl]="stepForms[idx]">
+      <!-- Your step content here -->
+      <div class="step-title-box">
+        <h3>{{ step.title }}</h3>
+        <p>{{ step.subtitle }}</p>
+      </div>
+    </mat-step>
+    }
+  </cx-stepper>
+</div>
