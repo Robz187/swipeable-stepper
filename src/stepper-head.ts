@@ -5,6 +5,7 @@ import {
   computed,
   ViewChild,
   ElementRef,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 export interface StepNavItem {
@@ -12,10 +13,17 @@ export interface StepNavItem {
   step?: number;
 }
 
+export interface StepData {
+  id: number;
+  title: string;
+  subtitle: string;
+}
+
 @Component({
   selector: 'cx-stepper-head',
   standalone: true,
   imports: [CommonModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <details
       class="progress-details"
@@ -92,6 +100,7 @@ export interface StepNavItem {
             (click)="closeDialog()"
             aria-label="Modal schließen"
           >
+            <!-- Material Icon or Input -->
             ✕
           </button>
         </div>
@@ -106,6 +115,7 @@ export interface StepNavItem {
               [attr.aria-label]="getDialogStepAriaLabel(step, idx)"
               (click)="onDialogStepClick(idx)"
             >
+            <!-- Material Icon or Input -->
               {{ isStepCompleted(idx) ? '✓' : (idx + 1) }}
             </button>
           }
@@ -124,34 +134,30 @@ export interface StepNavItem {
   styleUrl: './main.scss',
 })
 export class CxStepperHeadComponent {
-  @ViewChild('stepOverviewDialog')
-  stepOverviewDialog!: ElementRef<HTMLDialogElement>;
+  @ViewChild('stepOverviewDialog') stepOverviewDialog!: ElementRef<HTMLDialogElement>;
 
-  // === INPUTS (Data from parent) ===
-  readonly currentStep = input<number>();
-  readonly totalSteps = input<number>();
+  readonly currentStep = input<number>(1);
+  readonly totalSteps = input<number>(0);
   readonly progressPercentage = input.required<number>();
   readonly stepsVisible = input<boolean>(false);
   readonly visibleSteps = input<StepNavItem[]>([]);
-
-  // NEW: Full steps array for dialog
-  readonly allSteps = input.required<any[]>();
+  readonly allSteps = input.required<StepData[]>();
+  readonly linear = input<boolean>(false);
+  readonly selectedIndex = input<number>(0);
 
   // Current step index (0-based for internal logic)
-  readonly currentStepIndex = computed(() => this.currentStep()! - 1);
+  readonly currentStepIndex = computed(() => {
+    const step = this.currentStep();
+    return step ? step - 1 : 0;
+  });
 
-  // === OUTPUTS (Events to parent) ===
   readonly stepsVisibleChange = output<boolean>();
   readonly stepClick = output<number>();
-
-  // === DETAILS METHODS ===
 
   onDetailsToggle(event: Event): void {
     const details = event.target as HTMLDetailsElement;
     this.stepsVisibleChange.emit(details.open);
   }
-
-  // === DIALOG METHODS ===
 
   openDialog(): void {
     this.stepOverviewDialog?.nativeElement.showModal();
@@ -180,8 +186,6 @@ export class CxStepperHeadComponent {
     this.closeDialog();
   }
 
-  // === SHARED HELPER METHODS ===
-
   isStepCompleted(stepIndex: number): boolean {
     return stepIndex < this.currentStepIndex();
   }
@@ -205,7 +209,7 @@ export class CxStepperHeadComponent {
     return `Step ${stepNum} von ${this.totalSteps()}, ${status}`;
   }
 
-  getDialogStepAriaLabel(step: any, stepIndex: number): string {
+  getDialogStepAriaLabel(step: StepData, stepIndex: number): string {
     const stepNum = stepIndex + 1;
     const status = this.isStepCompleted(stepIndex)
       ? 'abgeschlossen'

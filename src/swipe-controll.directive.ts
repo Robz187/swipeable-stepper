@@ -1,10 +1,5 @@
-import { Directive, output, input, ElementRef, inject } from '@angular/core';
-
-interface TouchState {
-  startX: number;
-  startY: number;
-  startTime: number;
-}
+import { Directive, output, input } from '@angular/core';
+import { TouchState } from './evaluation.models';
 
 @Directive({
   selector: '[cxSwipeControl]',
@@ -27,7 +22,6 @@ export class CxSwipeControl {
 
   onTouchStart(event: TouchEvent): void {
     if (!this.cxSwipeControl()) return;
-    console.log('🔥 ENABLED VALUE:', this.cxSwipeControl());
     if (
       this.excludeInteractive() &&
       this.isInteractiveElement(event.target as HTMLElement)

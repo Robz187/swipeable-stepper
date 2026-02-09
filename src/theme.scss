@@ -1,0 +1,127 @@
+/**
+ * Theme Configuration
+ * CSS custom properties for colors, fonts, spacing, and layouts
+ * Override these variables to customize the stepper appearance
+ */
+
+:root {
+  /* Primary Colors */
+  --cx-stepper-primary: #ffc107;
+  --cx-stepper-primary-hover: #ffb300;
+  --cx-stepper-primary-light: #fff9e6;
+  --cx-stepper-primary-shadow: rgba(255, 193, 7, 0.4);
+  --cx-stepper-primary-alpha: rgba(255, 193, 7, 0.2);
+  --cx-stepper-primary-dark: rgba(255, 193, 7, 0.9);
+
+  /* Status Colors */
+  --cx-stepper-success: #4caf50;
+  --cx-stepper-warning: #ff9800;
+  --cx-stepper-danger: #f44336;
+  --cx-stepper-pending: #757575;
+
+  /* Neutral Colors */
+  --cx-stepper-white: white;
+  --cx-stepper-black: #000;
+  --cx-stepper-bg-light: #fafafa;
+  --cx-stepper-border: #e0e0e0;
+  --cx-stepper-text-primary: #333;
+  --cx-stepper-text-secondary: #666;
+  --cx-stepper-text-muted: #999;
+  --cx-stepper-disabled-opacity: 0.3;
+
+  /* Gradients */
+  --cx-stepper-progress-gradient: linear-gradient(90deg, #4caf50 0%, #ffc107 100%);
+
+  /* Shadows */
+  --cx-stepper-shadow-sm: 0 2px 8px rgba(255, 193, 7, 0.4);
+  --cx-stepper-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.3);
+  --cx-stepper-shadow-lg: 0 4px 20px rgba(0, 0, 0, 0.3);
+
+  /* Backdrop */
+  --cx-stepper-backdrop: rgba(0, 0, 0, 0.5);
+
+  /* Typography */
+  --cx-stepper-font-family: inherit;
+  --cx-stepper-font-size-xs: 11px;
+  --cx-stepper-font-size-sm: 12px;
+  --cx-stepper-font-size-base: 13px;
+  --cx-stepper-font-size-md: 14px;
+  --cx-stepper-font-size-lg: 16px;
+  --cx-stepper-font-size-xl: 18px;
+  --cx-stepper-font-size-2xl: 24px;
+  --cx-stepper-font-size-3xl: 28px;
+  --cx-stepper-font-size-icon-sm: 20px;
+  --cx-stepper-font-size-icon-lg: 32px;
+  --cx-stepper-font-weight-normal: 500;
+  --cx-stepper-font-weight-semibold: 600;
+  --cx-stepper-font-weight-bold: bold;
+  --cx-stepper-line-height: 1;
+
+  /* Spacing */
+  --cx-stepper-spacing-xs: 4px;
+  --cx-stepper-spacing-sm: 6px;
+  --cx-stepper-spacing-base: 8px;
+  --cx-stepper-spacing-md: 10px;
+  --cx-stepper-spacing-lg: 12px;
+  --cx-stepper-spacing-xl: 15px;
+  --cx-stepper-spacing-2xl: 20px;
+
+  /* Border Radius */
+  --cx-stepper-radius-sm: 2px;
+  --cx-stepper-radius-base: 4px;
+  --cx-stepper-radius-md: 8px;
+  --cx-stepper-radius-circle: 50%;
+
+  /* Layout Dimensions */
+  --cx-stepper-header-padding: 15px;
+  --cx-stepper-content-padding: 15px;
+  --cx-stepper-footer-padding: 15px;
+  --cx-stepper-nav-arrow-size: 40px;
+  --cx-stepper-step-circle-size: 28px;
+  --cx-stepper-close-btn-size: 35px;
+
+  /* Progress Bar */
+  --cx-stepper-progress-height: 6px;
+  --cx-stepper-progress-height-sm: 4px;
+  --cx-stepper-progress-border-radius: 3px;
+  --cx-stepper-progress-border-radius-sm: 2px;
+
+  /* Dialog */
+  --cx-stepper-dialog-max-width: 400px;
+  --cx-stepper-dialog-padding: 20px;
+  --cx-stepper-dialog-max-height: 80vh;
+  --cx-stepper-dialog-border-radius: 8px;
+
+  /* Grid Layout */
+  --cx-stepper-grid-columns: repeat(6, 1fr);
+  --cx-stepper-grid-gap: 10px;
+
+  /* Transitions */
+  --cx-stepper-transition-fast: 200ms;
+  --cx-stepper-transition-base: 250ms;
+  --cx-stepper-transition-normal: 300ms;
+  --cx-stepper-transition-ease: ease;
+  --cx-stepper-transition-ease-out: ease-out;
+  --cx-stepper-transition-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* Z-Index */
+  --cx-stepper-z-swipe-indicator: 100;
+
+  /* Focus Outline */
+  --cx-stepper-focus-width: 2px;
+  --cx-stepper-focus-offset: 2px;
+  --cx-stepper-focus-offset-inset: -2px;
+  --cx-stepper-focus-color: var(--cx-stepper-primary);
+  --cx-stepper-focus-color-white: white;
+  --cx-stepper-focus-color-black: var(--cx-stepper-black);
+
+  /* Animation */
+  --cx-stepper-animation-slide-distance: 20px;
+  --cx-stepper-animation-slide-distance-sm: 10px;
+  --cx-stepper-animation-scale-from: 0.5;
+  --cx-stepper-animation-scale-from-md: 0.8;
+  --cx-stepper-animation-scale-active: 1.1;
+  --cx-stepper-animation-scale-active-sm: 1.15;
+  --cx-stepper-animation-scale-press: 0.95;
+  --cx-stepper-animation-scale-press-light: 0.98;
+}

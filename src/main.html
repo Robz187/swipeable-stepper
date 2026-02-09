@@ -1,13 +1,34 @@
 <div class="evaluation-dialog" role="main">
-  <cx-stepper [isMobile]="isMobile()">
+  <cx-touch-stepper [linear]="true">
+
     @for (step of steps; track step.id; let idx = $index) {
-    <mat-step [label]="step.title" [stepControl]="stepForms[idx]">
-      <!-- Your step content here -->
-      <div class="step-title-box">
-        <h3>{{ step.title }}</h3>
-        <p>{{ step.subtitle }}</p>
-      </div>
-    </mat-step>
+      <mat-step
+        [label]="step.title"
+        [stepControl]="stepForms[idx]"
+        [editable]="true"
+        [optional]="false">
+
+        <div class="step-title-box">
+          <h3>{{ step.title }}</h3>
+          <p>{{ step.subtitle }}</p>
+        </div>
+
+        <div class="step-form-content">
+          <label class="form-label">
+            Bewertung für {{ step.title }}
+            <input
+              type="text"
+              class="form-textarea"
+              [formControl]="stepForms[idx].controls.evaluation"
+              placeholder="Ihre Bewertung..."
+              style="height: 60px;">
+          </label>
+
+          @if (stepForms[idx].controls.evaluation.invalid && stepForms[idx].controls.evaluation.touched) {
+            <div class="error-message">Dieses Feld ist erforderlich</div>
+          }
+        </div>
+      </mat-step>
     }
-  </cx-stepper>
+  </cx-touch-stepper>
 </div>

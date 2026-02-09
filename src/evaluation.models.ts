@@ -13,3 +13,10 @@ export interface TouchState {
   startY: number;
   startTime: number;
 }
+
+export interface NavigationAttemptEvent {
+  from: number;
+  to: number;
+  allowed: boolean;
+  reason?: 'validation' | 'linear' | 'boundary';
+}

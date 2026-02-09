@@ -1,4 +1,4 @@
-import { Component, input, output, ViewEncapsulation } from '@angular/core';
+import { Component, input, output, ViewEncapsulation, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -6,13 +6,14 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="nav-controls">
       <button
         class="nav-arrow"
-        [class.visually-disabled]="currentStepIndex() === 0"
+        [class.visually-disabled]="!canGoPrevious()"
         [attr.aria-label]="getPreviousAriaLabel()"
-        [disabled]="currentStepIndex() === 0"
+        [disabled]="!canGoPrevious()"
         (click)="previous.emit()"
       >
         ‹
@@ -29,9 +30,9 @@ import { CommonModule } from '@angular/common';
 
       <button
         class="nav-arrow"
-        [class.visually-disabled]="currentStepIndex() === (totalSteps() ?? 0) - 1"
+        [class.visually-disabled]="!canGoNext()"
         [attr.aria-label]="getNextAriaLabel()"
-        [attr.aria-disabled]="currentStepIndex() === (totalSteps() ?? 0) - 1"
+        [disabled]="!canGoNext()"
         (click)="next.emit()"
       >
         ›
@@ -41,22 +42,23 @@ import { CommonModule } from '@angular/common';
   styleUrl: './main.scss',
 })
 export class CxStepperNavigationComponent {
-  readonly currentStepIndex = input<number>();
-  readonly totalSteps = input<number>();
+  readonly currentStepIndex = input<number>(0);
+  readonly totalSteps = input<number>(0);
   readonly progressPercentage = input.required<number>();
-
+  readonly canGoPrevious = input<boolean>(false);
+  readonly canGoNext = input<boolean>(false);
   readonly previous = output<void>();
   readonly next = output<void>();
 
   getPreviousAriaLabel(): string {
-    return this.currentStepIndex() === 0
-      ? 'Vorheriger Step (nicht verfügbar)'
-      : 'Vorheriger Step';
+    return this.canGoPrevious()
+      ? 'Vorheriger Step'
+      : 'Vorheriger Step (nicht verfügbar)';
   }
 
   getNextAriaLabel(): string {
-    return this.currentStepIndex() === this.totalSteps()! - 1
-      ? 'Nächster Step (nicht verfügbar)'
-      : 'Nächster Step';
+    return this.canGoNext()
+      ? 'Nächster Step'
+      : 'Nächster Step (nicht verfügbar)';
   }
 }
