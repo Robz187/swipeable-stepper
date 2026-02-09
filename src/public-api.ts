@@ -23,12 +23,12 @@ export { CxSwipeControl } from './swipe-controll.directive';
 /**
  * Event emitted when navigation is blocked
  */
-export type { NavigationAttemptEvent } from './stepper';
+export type { NavigationAttemptEvent } from './evaluation.models';
 
 /**
  * Step data structure for dialog display
  */
-export type { StepData } from './stepper-head';
+export type { StepData } from './evaluation.models';
 
 /**
  * Step navigation item (for pagination)
