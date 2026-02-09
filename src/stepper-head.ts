@@ -8,16 +8,7 @@ import {
   ChangeDetectionStrategy,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-export interface StepNavItem {
-  type: 'step' | 'dots';
-  step?: number;
-}
-
-export interface StepData {
-  id: number;
-  title: string;
-  subtitle: string;
-}
+import { StepNavItem, StepData } from './evaluation.models';
 
 @Component({
   selector: 'cx-stepper-head',

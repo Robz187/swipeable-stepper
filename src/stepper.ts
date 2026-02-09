@@ -59,6 +59,22 @@ export class CxTouchStepperHostDirective extends CdkStepper {
  *   </mat-step>
  * </cx-touch-stepper>
  * ```
+ * // ✅ CORRECT
+ * ```html
+ * <cx-touch-stepper>
+ *   <mat-step>...</mat-step>
+ *   <mat-step>...</mat-step>
+ * </cx-touch-stepper>
+ * ```
+ *
+ * // ❌ WRONG
+ * ```html
+ * <cx-touch-stepper>
+ *   <div class="wrapper">
+ *     <mat-step>...</mat-step>  <!-- Wird nicht erkannt! -->
+ *   </div>
+ * </cx-touch-stepper>
+ * ```
  */
 @Component({
   selector: 'cx-touch-stepper',
@@ -120,18 +136,18 @@ export class CxTouchStepperHostDirective extends CdkStepper {
   styleUrl: './main.scss',
 })
 export class CxTouchStepperComponent implements AfterViewInit {
-  @ViewChild(CxStepperHeadComponent, {read:ElementRef})
+  @ViewChild(CxStepperHeadComponent, { read: ElementRef })
   private stepperHeadRef!: ElementRef;
   private destroyRef = inject(DestroyRef);
   private containerWidth = signal(0);
   readonly windowSize = computed(() => {
     const width = this.containerWidth();
-    if(width === 0) return 7;
+    if (width === 0) return 7;
 
     const itemWidth = 36;
     const maxItems = Math.floor(width / itemWidth);
     const half = Math.floor(maxItems / 2);
-    
+
     return Math.max(3, half);
   });
   /**
@@ -223,58 +239,58 @@ export class CxTouchStepperComponent implements AfterViewInit {
    * Visible steps for pagination (smart visibility)
    * Shows: current ± 2 steps, dots for gaps, always includes last step
    */
-readonly visibleSteps = computed((): StepNavItem[] => {
-  const current = this.selectedIndex();
-  const total = this.totalSteps();
-  const size = this.windowSize();
-  
-  if (total <= size * 2) {
-    return Array.from({ length: total }, (_, i) => ({
-      type: 'step',
-      step: i
-    } as StepNavItem));
-  }
-  
-  const result: StepNavItem[] = [];
-  
-  // START: current < size (first 7)
-  if (current < size) {
-    for (let i = 0; i < size; i++) {
+  readonly visibleSteps = computed((): StepNavItem[] => {
+    const current = this.selectedIndex();
+    const total = this.totalSteps();
+    const size = this.windowSize();
+
+    if (total <= size * 2) {
+      return Array.from({ length: total }, (_, i) => ({
+        type: 'step',
+        step: i
+      } as StepNavItem));
+    }
+
+    const result: StepNavItem[] = [];
+
+    // START: current < size (first 7)
+    if (current < size) {
+      for (let i = 0; i < size; i++) {
+        result.push({ type: 'step', step: i });
+      }
+      result.push({ type: 'dots' });
+      for (let i = total - size; i < total; i++) {
+        result.push({ type: 'step', step: i });
+      }
+      return result;
+    }
+
+    // END: current in last size steps
+    if (current >= total - size) {
+      for (let i = 0; i < size; i++) {
+        result.push({ type: 'step', step: i });
+      }
+      result.push({ type: 'dots' });
+      for (let i = total - size; i < total; i++) {
+        result.push({ type: 'step', step: i });
+      }
+      return result;
+    }
+
+    // MIDDLE: sliding window (current is last in left window)
+    const leftStart = current - size + 1;
+    const leftEnd = current;
+
+    for (let i = leftStart; i <= leftEnd; i++) {
       result.push({ type: 'step', step: i });
     }
     result.push({ type: 'dots' });
     for (let i = total - size; i < total; i++) {
       result.push({ type: 'step', step: i });
     }
+
     return result;
-  }
-  
-  // END: current in last size steps
-  if (current >= total - size) {
-    for (let i = 0; i < size; i++) {
-      result.push({ type: 'step', step: i });
-    }
-    result.push({ type: 'dots' });
-    for (let i = total - size; i < total; i++) {
-      result.push({ type: 'step', step: i });
-    }
-    return result;
-  }
-  
-  // MIDDLE: sliding window (current is last in left window)
-  const leftStart = current - size + 1;
-  const leftEnd = current;
-  
-  for (let i = leftStart; i <= leftEnd; i++) {
-    result.push({ type: 'step', step: i });
-  }
-  result.push({ type: 'dots' });
-  for (let i = total - size; i < total; i++) {
-    result.push({ type: 'step', step: i });
-  }
-  
-  return result;
-});
+  });
 
   /**
    * All steps data for dialog
@@ -297,7 +313,10 @@ readonly visibleSteps = computed((): StepNavItem[] => {
       const subscriptions: Subscription[] = [];
 
       // Clear old validation states
-      this._validationMap.set(new Map());
+      this._validationMap.update(map => {
+        map.clear();
+        return new Map(map);
+      });
 
       steps.forEach((step: any, index: number) => {
         if (step.stepControl) {
@@ -309,7 +328,6 @@ readonly visibleSteps = computed((): StepNavItem[] => {
 
           // Subscribe to changes
           const sub = step.stepControl.statusChanges
-            // .pipe(takeUntilDestroyed())  ← REMOVE THIS!
             .subscribe((status: string) => {
               this._validationMap.update(map => {
                 map.set(index, status === 'VALID');
@@ -326,25 +344,32 @@ readonly visibleSteps = computed((): StepNavItem[] => {
     });
   }
   ngAfterViewInit(): void {
-      if (this.stepperHeadRef) {
-        const navElement = this.stepperHeadRef.nativeElement.querySelector('.step-navigation');
-        
-        if (navElement) {
-          const rect = navElement.getBoundingClientRect();
-          this.containerWidth.set(rect.width);
-          
-          const observer = new ResizeObserver(() => {
-            const newRect = navElement.getBoundingClientRect();
-            this.containerWidth.set(newRect.width);
-          });
-          
-          observer.observe(navElement);
-          
-          this.destroyRef.onDestroy(() => observer.disconnect());
-        }
+    if (!this.stepperHeadRef) {
+      return
+    };
+
+    if (this.stepperHeadRef) {
+      const navElement = this.stepperHeadRef.nativeElement.querySelector('.step-navigation');
+      if (!navElement) {
+        return
+      };
+
+      if (navElement) {
+        const rect = navElement.getBoundingClientRect();
+        this.containerWidth.set(rect.width);
+
+        const observer = new ResizeObserver(() => {
+          const newRect = navElement.getBoundingClientRect();
+          this.containerWidth.set(newRect.width);
+        });
+
+        observer.observe(navElement);
+
+        this.destroyRef.onDestroy(() => observer.disconnect());
       }
-      
-      this._stepperInitialized.set(true);
+    }
+
+    this._stepperInitialized.set(true);
   }
 
   /**

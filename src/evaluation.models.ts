@@ -20,3 +20,8 @@ export interface NavigationAttemptEvent {
   allowed: boolean;
   reason?: 'validation' | 'linear' | 'boundary';
 }
+export interface StepData {
+  id: number;
+  title: string;
+  subtitle: string;
+}
